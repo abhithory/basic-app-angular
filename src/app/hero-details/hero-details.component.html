@@ -1,12 +1,24 @@
 <button type="button" (click)="goBack()">go back</button>
 <div *ngIf="hero">
 
-    <h2>{{ hero.name | uppercase}} Details</h2>
+    <h2>{{ hero.login| uppercase}} Details</h2>
     <div>id: {{hero.id}}</div>
 
+    <img [src]="hero.avatar_url" alt="" width="300" style="border-radius: 50%;border: 2px solid black ;">
     <div>
+        <a [href]="hero.html_url" target="_blank">
+            <button>Go to Github</button>
+        </a>
         <label for="hero-name">Hero name: </label>
         <input id="hero-name" type="text" [(ngModel)]="hero.name" />
+
+        <h3>{{hero.bio}}</h3>
+
+        <h3>Followers: {{hero.followers}}</h3>
+        <h3>Following: {{hero.following}}</h3>
+
+        <h3>Created At: {{hero.created_at | date}}</h3>
+        <h3>Updated At: {{hero.updated_at | date}}</h3>
     </div>
 
 </div>

@@ -1,29 +1,33 @@
 import { Injectable } from '@angular/core';
-import { Hero } from './hero';
-import { HEROES } from './mock-heroes';
+import { GitHubUserDetails, Hero } from './hero';
 import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HeroService {
+  constructor(
+    private http: HttpClient,
+    private messageService: MessageService
+  ) { }
 
-  constructor(private messageService: MessageService) { }
+  private heroesUrl = 'https://api.github.com/users';  // URL to web api
 
+  private log(message: string) {
+    this.messageService.add(`HeroService: ${message}`);
+  }
 
   getHeroes(): Observable<Hero[]> {
-    const heroes = of(HEROES);
-    this.messageService.add('HeroService: fetched heroes');
-    return heroes;
+    const herosData = this.http.get<Hero[]>(this.heroesUrl);
+    return herosData;
   }
 
-  getHero(id: number): Observable<Hero> {
+  getHero(id: string): Observable<GitHubUserDetails> {
     // For now, assume that a hero with the specified `id` always exists.
     // Error handling will be added in the next step of the tutorial.
-    const hero = HEROES.find(h => h.id === id)!;
-    this.messageService.add(`HeroService: fetched hero id=${id}`);
-    return of(hero);
+    const herosData = this.http.get<GitHubUserDetails>(this.heroesUrl + "/" + id);
+    return herosData;
   }
-
 }
