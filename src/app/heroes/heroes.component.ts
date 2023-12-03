@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Hero } from '../hero';
 import { CommonModule } from '@angular/common';
 import { HeroDetailsComponent } from '../hero-details/hero-details.component';
 import { HeroService } from '../hero.service';
+import { MessageService } from '../message.service';
 
 @Component({
   selector: 'app-heroes',
@@ -11,25 +12,27 @@ import { HeroService } from '../hero.service';
   templateUrl: './heroes.component.html',
   styleUrl: './heroes.component.scss',
 })
-export class HeroesComponent {
-  constructor(private heroService: HeroService) {
-
-  };
+export class HeroesComponent implements OnInit {
   heros: Hero[] = [];
 
   selectedHero?: Hero;
-
-  onSelect(here: Hero): void {
-    this.selectedHero = here;
-  }
-
-
-  getHeroes(): void {
-    // this.heros = this.heroService.getHeroes();
-    this.heroService.getHeroes().subscribe(heroes => this.heros = heroes);
-  }
+  constructor(
+    private heroService: HeroService,
+    private messageService: MessageService
+  ) { }
 
   ngOnInit(): void {
-    this.getHeroes()
+    this.getHeroes();
   }
+
+  onSelect(hero: Hero): void {
+    this.selectedHero = hero;
+    this.messageService.add(`HeroesComponent: Selected hero id=${hero.id}`);
+
+  }
+
+  getHeroes(): void {
+    this.heroService.getHeroes().subscribe((heroes) => (this.heros = heroes));
+  }
+
 }
